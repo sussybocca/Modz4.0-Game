@@ -3,7 +3,7 @@ name: Generate Blog Posts
 on:
   push:
     paths:
-      - 'blog/update.txt'
+      - 'blog/update-*.txt'
   workflow_dispatch:
 
 jobs:
@@ -15,48 +15,121 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Read post count from update.txt
-        id: read_count
+      - name: Find the latest update file and extract target post count
+        id: get_count
         run: |
-          if [ -f blog/update.txt ]; then
-            count=$(cat blog/update.txt | xargs)
+          latest=$(ls blog/update-*.txt 2>/dev/null | sort -V | tail -n1)
+          if [ -z "$latest" ]; then
+            echo "No update-*.txt file found. Creating blog/update-1.txt with default value 1."
+            mkdir -p blog
+            echo "1" > blog/update-1.txt
+            count=1
+          else
+            count=$(basename "$latest" | sed -E 's/^update-([0-9]+)\.txt$/\1/')
             if ! [[ "$count" =~ ^[0-9]+$ ]]; then
-              echo "Error: update.txt does not contain a valid number"
+              echo "Error: Could not extract a valid number from filename $latest"
               exit 1
             fi
-            echo "count=$count" >> $GITHUB_OUTPUT
-          else
-            echo "update.txt not found in blog/ folder"
-            exit 1
+            echo "Target post count from $latest: $count"
           fi
+          echo "count=$count" >> $GITHUB_OUTPUT
 
-      - name: Generate missing post files from template
+      - name: Generate missing post files (advanced inline HTML)
         run: |
-          count=${{ steps.read_count.outputs.count }}
+          count=${{ steps.get_count.outputs.count }}
           for ((i=1; i<=count; i++)); do
             post_file="blog/post${i}.html"
             if [ ! -f "$post_file" ]; then
               echo "Creating $post_file"
-              cp blog/post-template.html "$post_file"
               post_date=$(date -d "2026-01-01 + $((i-1)) days" +"%B %d, %Y" 2>/dev/null || echo "February $i, 2026")
-              sed -i "s/POST_NUMBER/$i/g" "$post_file"
-              sed -i "s/POST_TITLE/Post $i/g" "$post_file"
-              sed -i "s/POST_DATE/$post_date/g" "$post_file"
+              # Build the entire HTML file using printf, escaping all double quotes
+              printf '%s\n' \
+                "<!DOCTYPE html>" \
+                "<html lang=\"en\">" \
+                "<head>" \
+                "    <meta charset=\"UTF-8\">" \
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" \
+                "    <title>Blog Post ${i} – Modz4.0</title>" \
+                "    <link rel=\"stylesheet\" href=\"/css/extra.css\">" \
+                "    <style>" \
+                "        .post-container {" \
+                "            max-width: 800px;" \
+                "            margin: 2rem auto;" \
+                "            padding: 2rem;" \
+                "            background: #1e2430;" \
+                "            border-radius: 20px;" \
+                "            border: 1px solid #2a2f3c;" \
+                "            box-shadow: 0 10px 30px rgba(0,0,0,0.5);" \
+                "        }" \
+                "        .post-header {" \
+                "            text-align: center;" \
+                "            margin-bottom: 2rem;" \
+                "        }" \
+                "        .post-title {" \
+                "            font-size: 2.5rem;" \
+                "            color: #ffaa00;" \
+                "            margin: 0.5rem 0;" \
+                "        }" \
+                "        .post-meta {" \
+                "            color: #8892b0;" \
+                "            font-size: 0.9rem;" \
+                "        }" \
+                "        .post-content {" \
+                "            line-height: 1.8;" \
+                "            color: #b0b8d0;" \
+                "        }" \
+                "        .post-content img {" \
+                "            max-width: 100%;" \
+                "            border-radius: 10px;" \
+                "            margin: 1rem 0;" \
+                "        }" \
+                "        .post-content blockquote {" \
+                "            border-left: 4px solid #ffaa00;" \
+                "            padding-left: 1rem;" \
+                "            margin: 1rem 0;" \
+                "            color: #ddd;" \
+                "        }" \
+                "        .back-link {" \
+                "            display: inline-block;" \
+                "            margin-top: 2rem;" \
+                "            color: #667eea;" \
+                "            text-decoration: none;" \
+                "            font-weight: 600;" \
+                "        }" \
+                "        .back-link:hover {" \
+                "            text-decoration: underline;" \
+                "        }" \
+                "    </style>" \
+                "</head>" \
+                "<body>" \
+                "    <div class=\"post-container\">" \
+                "        <div class=\"post-header\">" \
+                "            <h1 class=\"post-title\">Post ${i}</h1>" \
+                "            <div class=\"post-meta\">Published on ${post_date} | Category: General</div>" \
+                "        </div>" \
+                "        <div class=\"post-content\">" \
+                "            <p>This is a placeholder for blog post ${i}. Replace this content with your actual post text, images, and media.</p>" \
+                "            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>" \
+                "            <blockquote>“Creativity is intelligence having fun.” – Albert Einstein</blockquote>" \
+                "            <p>Use this template to create your own posts. The GitHub Action will automatically generate new post files based on the number in update-*.txt.</p>" \
+                "        </div>" \
+                "        <a href=\"/blog/\" class=\"back-link\">← Back to Blog</a>" \
+                "    </div>" \
+                "</body>" \
+                "</html>" > "$post_file"
             else
               echo "$post_file already exists"
             fi
           done
 
-      - name: Update blog index with post links
+      - name: Update blog index with post links (advanced card HTML)
         run: |
-          count=${{ steps.read_count.outputs.count }}
+          count=${{ steps.get_count.outputs.count }}
           index_file="blog/index.html"
-
           if ! grep -q "<!-- POSTS_START -->" "$index_file" || ! grep -q "<!-- POSTS_END -->" "$index_file"; then
             echo "Error: blog/index.html must contain <!-- POSTS_START --> and <!-- POSTS_END --> markers"
             exit 1
           fi
-
           tmp_cards=$(mktemp)
           for ((i=count; i>=1; i--)); do
             post_date=$(date -d "2026-01-01 + $((i-1)) days" +"%B %d, %Y" 2>/dev/null || echo "February $i, 2026")
@@ -67,42 +140,39 @@ jobs:
             else
               emoji="📰"
             fi
-
-            # Build the card using printf (avoids heredoc issues)
+            # Build card HTML using printf, no heredoc
             printf '%s\n' \
-            "        <a href=\"/blog/post${i}.html\" style=\"text-decoration: none;\">" \
-            "            <div class=\"post-card\">" \
-            "                <div class=\"post-image\">${emoji}</div>" \
-            "                <div class=\"post-content\">" \
-            "                    <div class=\"post-meta\">" \
-            "                        <span class=\"post-date\">${post_date}</span>" \
-            "                        <span class=\"post-category\">Post ${i}</span>" \
-            "                    </div>" \
-            "                    <h2 class=\"post-title\">Post ${i}</h2>" \
-            "                    <p class=\"post-excerpt\">This is a placeholder for post ${i}. Replace with actual excerpt.</p>" \
-            "                    <span class=\"read-more\">Read more →</span>" \
-            "                </div>" \
-            "            </div>" \
-            "        </a>" >> "$tmp_cards"
+              "        <a href=\"/blog/post${i}.html\" style=\"text-decoration: none;\">" \
+              "            <div class=\"post-card\">" \
+              "                <div class=\"post-image\">${emoji}</div>" \
+              "                <div class=\"post-content\">" \
+              "                    <div class=\"post-meta\">" \
+              "                        <span class=\"post-date\">${post_date}</span>" \
+              "                        <span class=\"post-category\">Post ${i}</span>" \
+              "                    </div>" \
+              "                    <h2 class=\"post-title\">Post ${i}</h2>" \
+              "                    <p class=\"post-excerpt\">This is a placeholder for post ${i}. Replace with actual excerpt.</p>" \
+              "                    <span class=\"read-more\">Read more →</span>" \
+              "                </div>" \
+              "            </div>" \
+              "        </a>" >> "$tmp_cards"
           done
-
           awk -v cards="$(cat "$tmp_cards")" '
             /<!-- POSTS_START -->/ { print; print cards; next }
             /<!-- POSTS_END -->/ { next }
             { print }
           ' "$index_file" > "${index_file}.new"
-
           mv "${index_file}.new" "$index_file"
           rm -f "$tmp_cards"
 
       - name: Commit changes
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global.user.name 'github-actions[bot]'
+          git config --global.user.email 'github-actions[bot]@users.noreply.github.com'
           git add blog/
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Auto-generate blog posts from update.txt"
+            git commit -m "Auto-generate blog posts from update-*.txt"
             git push
           fi
