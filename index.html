@@ -269,6 +269,12 @@
             height: calc(100vh - 60px);
             margin-top: 60px;
         }
+
+        /* Ensure Blazor sidebar starts below fixed top navbar */
+        .sidebar {
+            top: 60px !important;
+            height: calc(100vh - 60px) !important;
+        }
     </style>
 </head>
 <body>
