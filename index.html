@@ -29,7 +29,7 @@
         }
     </script>
     <style>
-        /* (keep your existing styles – unchanged) */
+        /* Original styles */
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         #app { height: 100vh; width: 100vw; }
         .game-container { position: relative; width: 100%; height: calc(100vh - 60px); }
@@ -64,10 +64,98 @@
         .layer-item { display: flex; align-items: center; justify-content: space-between; padding: 5px; border: 1px solid #ddd; margin-bottom: 2px; }
         .layer-item.dimmed { opacity: 0.5; }
         .frame-list { max-height: 200px; overflow-y: auto; }
+
+        /* Navigation bar styles */
+        .site-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(20, 30, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .nav-links a.highlight {
+            background: #ffaa00;
+            color: #0c0f15;
+            font-weight: 600;
+        }
+        .nav-links a.highlight:hover {
+            background: #ffbb22;
+        }
+        .brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand span {
+            background: #ffaa00;
+            color: #0c0f15;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        /* Adjust app to account for nav bar */
+        #app {
+            height: calc(100vh - 50px);
+            margin-top: 50px;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Navigation bar with links to all static pages -->
+    <div class="site-nav">
+        <a href="/" class="brand">
+            🎮 Modz<span>4.0</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">Game World</a>
+            <a href="/signup-a">Sign Up A</a>
+            <a href="/signup-b">Sign Up B</a>
+            <a href="/campaign/summer2026/">Summer Jam</a>
+            <a href="/campaign/spring2026/">Spring Jam</a>
+            <a href="/admin/">Admin</a>
+            <a href="/blog/">Blog</a>
+            <a href="/en/">English</a>
+            <a href="/es/">Español</a>
+            <a href="/fr/">Français</a>
+            <a href="/us/">US</a>
+            <a href="/ca/">Canada</a>
+            <a href="/uk/">UK</a>
+            <a href="/404">404 Test</a>
+            <a href="/maintenance.html">Maintenance</a>
+        </div>
+    </div>
+
     <div id="app">Loading...</div>
 
     <div id="blazor-error-ui">
