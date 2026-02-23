@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer Jam 2026 – Modz4.0 Blog</title>
+    <link rel="stylesheet" href="/css/extra.css">
+    <style>
+        .post-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #1e2430;
+            border-radius: 20px;
+            border: 1px solid #2a2f3c;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .post-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .post-title {
+            font-size: 2.5rem;
+            color: #ffaa00;
+            margin: 0.5rem 0;
+        }
+        .post-meta {
+            color: #8892b0;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .post-content {
+            line-height: 1.8;
+            color: #b0b8d0;
+        }
+        .post-content h2 {
+            color: #ffaa00;
+            font-size: 1.8rem;
+            margin-top: 2rem;
+        }
+        .post-content p {
+            margin: 1rem 0;
+        }
+        .post-content .prize-box {
+            background: #2e3440;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid #ffaa00;
+        }
+        .post-content .prize-box h3 {
+            color: #ffaa00;
+            margin-top: 0;
+        }
+        .post-content ul {
+            margin: 1rem 0 1rem 2rem;
+        }
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #2e3440;
+            border-radius: 10px;
+        }
+        .countdown-item {
+            text-align: center;
+        }
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffaa00;
+            line-height: 1;
+        }
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #8892b0;
+            text-transform: uppercase;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="post-container">
+        <div class="post-header">
+            <h1 class="post-title">Summer Jam 2026: The Ultimate Modding Challenge</h1>
+            <div class="post-meta">
+                <span>Published on February 15, 2026</span>
+                <span>•</span>
+                <span>Category: Events</span>
+                <span>•</span>
+                <span>3 min read</span>
+            </div>
+        </div>
+        <div class="post-content">
+            <p>Get ready for the biggest modding event of the year! <strong>Summer Jam 2026</strong> runs from June 1 to June 30, and we're inviting creators from around the world to build the most amazing mods using Modz4.0.</p>
+            
+            <div class="prize-box">
+                <h3>🏆 Prizes</h3>
+                <ul>
+                    <li><strong>Grand Prize:</strong> $5,000 + lifetime Modz4.0 Pro subscription</li>
+                    <li><strong>Runner Up:</strong> $2,500 + 1‑year Pro subscription</li>
+                    <li><strong>Community Choice:</strong> $1,000 + 6‑month Pro subscription</li>
+                    <li><strong>Best Newcomer:</strong> $500 + 3‑month Pro subscription</li>
+                </ul>
+                <p>All participants receive a special in‑game badge and profile flair.</p>
+            </div>
+            
+            <h2>How to Enter</h2>
+            <ol>
+                <li>Download Modz4.0 (it's free!) from our <a href="/" style="color:#667eea;">homepage</a>.</li>
+                <li>Create an account and join the Summer Jam community hub.</li>
+                <li>Build your mod – it can be anything: new characters, levels, gameplay mechanics, or total conversions.</li>
+                <li>Submit your mod before June 30, 11:59 PM UTC.</li>
+            </ol>
+            
+            <h2>Theme: "Reinvention"</h2>
+            <p>This year's theme is <strong>Reinvention</strong>. Take something classic and give it a fresh twist – reimagine a game mechanic, remix a beloved character, or transform the world in unexpected ways, by the way sorry that none of our tools, dont work at the moment.</p>
+            
+            <h2>Key Dates</h2>
+            <ul>
+                <li><strong>May 1:</strong> Registration opens</li>
+                <li><strong>June 1:</strong> Jam starts</li>
+                <li><strong>June 30:</strong> Submission deadline</li>
+                <li><strong>July 15:</strong> Winners announced</li>
+            </ul>
+            
+            <div class="countdown-timer" id="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">--</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">--</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">--</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">--</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+            
+            <p style="text-align:center; margin-top:2rem;">
+                <a href="/signup" style="background:#ffaa00; color:#0c0f15; padding:1rem 2rem; border-radius:30px; text-decoration:none; font-weight:bold;">Register Now →</a>
+            </p>
+        </div>
+        
+        <script>
+            // Countdown to June 1, 2026
+            const target = new Date('2026-06-01T00:00:00');
+            function updateCountdown() {
+                const now = new Date();
+                const diff = target - now;
+                if (diff <= 0) {
+                    document.getElementById('countdown').innerHTML = '<div style="color:#ffaa00;">The jam has started!</div>';
+                    return;
+                }
+                const days = Math.floor(diff / (1000*60*60*24));
+                const hours = Math.floor((diff % (86400000)) / (3600000));
+                const minutes = Math.floor((diff % 3600000) / 60000);
+                const seconds = Math.floor((diff % 60000) / 1000);
+                document.getElementById('days').textContent = days;
+                document.getElementById('hours').textContent = hours;
+                document.getElementById('minutes').textContent = minutes;
+                document.getElementById('seconds').textContent = seconds;
+            }
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        </script>
+        
+        <a href="/blog/" class="back-link">← Back to Blog</a>
+    </div>
+</body>
+</html>
