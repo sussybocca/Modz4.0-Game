@@ -3,37 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog – Modz4.0</title>
+    <title>Modz4.0 Blog – Official News & Updates</title>
+    <link rel="stylesheet" href="/css/extra.css">
     <style>
-        body { background: #0c0f15; color: #e0e0e0; font-family: 'Inter', sans-serif; padding: 2rem; }
-        .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
-        .post-card { background: #1e2430; border-radius: 20px; padding: 1.5rem; transition: 0.2s; }
-        .post-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .post-date { color: #8892b0; font-size: 0.9rem; }
-        h2 { margin: 0.5rem 0; color: #ffaa00; }
-        a { text-decoration: none; color: inherit; }
-        .read-more { color: #667eea; font-weight: 600; }
+        /* Additional blog-specific styles */
+        .blog-header {
+            background: linear-gradient(135deg, #1e2430, #0f1219);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid #2a2f3c;
+            margin-bottom: 3rem;
+        }
+        .blog-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .blog-header p {
+            font-size: 1.2rem;
+            color: #b0b8d0;
+            max-width: 600px;
+            margin: 1rem auto;
+        }
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            background: #1e2430;
+            border: 1px solid #2a2f3c;
+            color: #b0b8d0;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .category-btn.active, .category-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .post-card {
+            background: #1e2430;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #2a2f3c;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .post-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.6);
+            border-color: #3a4050;
+        }
+        .post-image {
+            width: 100%;
+            height: 200px;
+            background: #2e3440;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border-bottom: 1px solid #2a2f3c;
+        }
+        .post-content {
+            padding: 1.5rem;
+            flex: 1;
+        }
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #8892b0;
+            margin-bottom: 0.75rem;
+        }
+        .post-category {
+            background: #2e3440;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            color: #b0b8d0;
+            font-weight: 500;
+        }
+        .post-title {
+            margin: 0 0 1rem;
+            font-size: 1.5rem;
+            color: #ffaa00;
+            line-height: 1.3;
+        }
+        .post-excerpt {
+            color: #b0b8d0;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+        .read-more:hover {
+            gap: 1rem;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0 4rem;
+        }
+        .page-btn {
+            background: #1e2430;
+            border: 1px solid #2a2f3c;
+            color: #b0b8d0;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .page-btn.active, .page-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #2a2f3c;
+            color: #8892b0;
+        }
+        @media (max-width: 768px) {
+            .post-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1rem 2rem;
+            }
+            .blog-header h1 {
+                font-size: 2.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>📰 Modz4.0 Blog</h1>
-    <div class="post-grid">
-        <a href="/blog/post1.html">
+    <div class="blog-header">
+        <h1>📰 Modz4.0 Blog</h1>
+        <p>The latest news, updates, and tutorials from the modding community</p>
+        <div class="category-filter">
+            <span class="category-btn active">All</span>
+            <span class="category-btn">Announcements</span>
+            <span class="category-btn">Tutorials</span>
+            <span class="category-btn">Community</span>
+            <span class="category-btn">Releases</span>
+        </div>
+    </div>
+
+    <div class="post-grid" id="postGrid">
+        <!-- Posts will be dynamically generated by GitHub Action -->
+        <a href="/blog/post1.html" style="text-decoration: none;">
             <div class="post-card">
-                <div class="post-date">February 22, 2026</div>
-                <h2>Introducing Modz4.0</h2>
-                <p>The most advanced moddable game engine is here.</p>
-                <span class="read-more">Read more →</span>
+                <div class="post-image">🎮</div>
+                <div class="post-content">
+                    <div class="post-meta">
+                        <span class="post-date">February 22, 2026</span>
+                        <span class="post-category">Announcements</span>
+                    </div>
+                    <h2 class="post-title">Introducing Modz4.0</h2>
+                    <p class="post-excerpt">The most advanced moddable game engine is here. Learn about the features that will change modding forever.</p>
+                    <span class="read-more">Read more →</span>
+                </div>
             </div>
         </a>
-        <a href="/blog/post2.html">
+        <a href="/blog/post2.html" style="text-decoration: none;">
             <div class="post-card">
-                <div class="post-date">February 15, 2026</div>
-                <h2>Summer Jam Announcement</h2>
-                <p>Get ready for the biggest modding event.</p>
-                <span class="read-more">Read more →</span>
+                <div class="post-image">☀️</div>
+                <div class="post-content">
+                    <div class="post-meta">
+                        <span class="post-date">February 15, 2026</span>
+                        <span class="post-category">Events</span>
+                    </div>
+                    <h2 class="post-title">Summer Jam Announcement</h2>
+                    <p class="post-excerpt">Get ready for the biggest modding event of the year. Prizes, workshops, and more.</p>
+                    <span class="read-more">Read more →</span>
+                </div>
             </div>
         </a>
+        <!-- Placeholder for future posts – will be replaced by action -->
+    </div>
+
+    <div class="pagination">
+        <span class="page-btn">1</span>
+        <span class="page-btn">2</span>
+        <span class="page-btn">3</span>
+        <span class="page-btn">4</span>
+        <span class="page-btn">5</span>
+    </div>
+
+    <div class="footer">
+        © 2026 Modz4.0 – All rights reserved. <a href="/" style="color:#667eea;">Return to Game World</a>
     </div>
 </body>
 </html>
