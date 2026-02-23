@@ -1,73 +1,268 @@
-/* Basic styles - can be expanded later */
-.content {
-    padding-top: 1.1rem;
+/* ============================================
+   Modern Immersive Layout – Modz4.0
+   Glassmorphism, animations, custom scrollbars
+   ============================================ */
+
+:root {
+    --bg-dark: #0a0c10;
+    --bg-panel: rgba(18, 22, 28, 0.85);
+    --bg-sidebar: rgba(12, 15, 20, 0.95);
+    --accent-primary: #667eea;
+    --accent-secondary: #764ba2;
+    --accent-glow: #ffaa00;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b8d0;
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(102, 126, 234, 0.3);
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.7);
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
+/* Global reset / base */
+body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow: hidden; /* layout handles scrolling */
 }
 
+/* Main page container */
+.page {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background: var(--bg-dark);
+    overflow: hidden;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+    width: 280px;
+    background: var(--bg-sidebar);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-md);
+    transition: width 0.3s ease;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4a4f5e #1e2430;
+}
+
+/* Custom scrollbar for sidebar (WebKit) */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: #1e2430;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: #4a4f5e;
+    border-radius: 10px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #5f6a7a;
+}
+
+/* Nav menu inside sidebar – your existing NavMenu.razor will fill this */
+.nav-scrollable {
+    flex: 1;
+    padding: 1rem 0.5rem;
+}
+
+/* ========== MAIN CONTENT AREA ========== */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-dark);
+    overflow: hidden;
+}
+
+/* Top row / header */
 .top-row {
-    height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    height: 4rem;
+    background: rgba(18, 22, 28, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 2rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
 }
 
-.navbar-brand {
-    font-size: 1.1rem;
+.top-row a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-left: 2rem;
+    transition: var(--transition-smooth);
+    position: relative;
 }
 
-.oi {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
-    top: -2px;
+.top-row a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-primary);
+    transition: width 0.25s ease;
 }
 
-.nav-item {
-    font-size: 0.9rem;
-    padding-bottom: 0.5rem;
-}
-
-    .nav-item:first-of-type {
-        padding-top: 1rem;
-    }
-
-    .nav-item:last-of-type {
-        padding-bottom: 1rem;
-    }
-
-    .nav-item ::deep a {
-        color: #d7d7d7;
-        border-radius: 4px;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        line-height: 3rem;
-    }
-
-.nav-item ::deep a.active {
-    background-color: rgba(255,255,255,0.25);
+.top-row a:hover {
     color: white;
+}
+
+.top-row a:hover::after {
+    width: 100%;
+}
+
+/* ========== MAIN CONTENT WRAPPER ========== */
+.content {
+    height: calc(100vh - 4rem); /* subtract top row height */
+    overflow-y: auto;
+    padding: 2rem;
+    background: var(--bg-dark);
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for main content (WebKit) – already present but enhanced */
+.content::-webkit-scrollbar {
+    width: 10px;
+}
+.content::-webkit-scrollbar-track {
+    background: #1a1f2a;
+    border-radius: 0;
+}
+.content::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 10px;
+    border: 2px solid #1a1f2a;
+}
+.content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a67d8, #6b3fa0);
+}
+
+/* Firefox scrollbar */
+.content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-primary) #1a1f2a;
+}
+
+/* ========== NAVIGATION ITEMS (inside sidebar) – these will be used by NavMenu.razor ========== */
+.nav-item {
+    margin-bottom: 0.25rem;
+}
+
+.nav-item ::deep a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: var(--transition-smooth);
+    font-weight: 500;
+    gap: 1rem;
+}
+
+.nav-item ::deep a .oi {
+    font-size: 1.2rem;
+    width: 1.8rem;
+    text-align: center;
+    transition: var(--transition-smooth);
 }
 
 .nav-item ::deep a:hover {
-    background-color: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    transform: translateX(4px);
+}
+
+.nav-item ::deep a.active {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+    border-left: 3px solid var(--accent-primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-item ::deep a.active .oi {
+    color: var(--accent-glow);
+}
+
+/* ========== TOGGLE BUTTON (hamburger) ========== */
+.navbar-toggler {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border-radius: 8px;
+    transition: var(--transition-smooth);
+}
+
+.navbar-toggler:hover {
+    background: rgba(255, 255, 255, 0.1);
     color: white;
 }
 
-@media (min-width: 641px) {
-    .navbar-toggler {
-        display: none;
-    }
+.navbar-brand {
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: auto;
+}
 
-    .collapse {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
+/* ========== RESPONSIVE BEHAVIOR ========== */
+@media (max-width: 640.98px) {
+    .page {
+        flex-direction: column;
     }
-    
-    .nav-scrollable {
-        /* Allow sidebar to scroll for tall menus */
-        height: calc(100vh - 3.5rem);
-        overflow-y: auto;
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 40vh;
+        border-right: none;
+        border-bottom: 1px solid var(--border-light);
     }
+    .top-row {
+        justify-content: space-between;
+        padding: 0 1rem;
+    }
+    .top-row a {
+        margin-left: 1rem;
+    }
+    .content {
+        height: calc(100vh - 4rem - 40vh);
+    }
+}
+
+/* Optional: Glass card effect for content panels (if you use them) */
+.glass-card {
+    background: rgba(18, 22, 28, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition-smooth);
+}
+
+.glass-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
 }
