@@ -314,6 +314,9 @@
         <a class="dismiss">🗙</a>
     </div>
 
+    <!-- Load Blazor WebAssembly framework -->
+    <script src="_framework/blazor.webassembly.js"></script>
+
     <!-- Load three.js as a module -->
     <script type="module" src="js/three.js"></script>
     <!-- Load analytics.js (advanced tracking) -->
@@ -374,12 +377,7 @@
             const statusDiv = document.getElementById('analyticsStatus');
             if (statusDiv) {
                 statusDiv.addEventListener('click', () => {
-                    // If analytics object exists, we can trigger the consent banner again
                     if (window.Modz40Analytics) {
-                        // You could call a method to show banner, but we'll just simulate by redirecting to a consent page
-                        // For simplicity, we'll just reload the page? Not ideal. Instead, we can try to set a temporary flag.
-                        // Better: expose a method to reset consent.
-                        // For now, we'll just alert that consent can be managed in browser settings.
                         alert('Analytics consent can be managed in your browser settings (clear cookies to reset).');
                     } else {
                         alert('Analytics not loaded.');
