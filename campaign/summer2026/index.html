@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer Modding Jam 2026</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .countdown-item {
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px);
+            padding: 1rem;
+            border-radius: 20px;
+            min-width: 100px;
+        }
+        .countdown-item span {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .cta {
+            background: white;
+            color: #e67e22;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin: 2rem 0;
+            transition: 0.2s;
+        }
+        .cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☀️ Summer Modding Jam</h1>
+        <p>Create your best mod and win $5000!</p>
+        <div class="countdown" id="countdown">
+            <div class="countdown-item"><span id="days">30</span> Days</div>
+            <div class="countdown-item"><span id="hours">12</span> Hours</div>
+            <div class="countdown-item"><span id="minutes">00</span> Mins</div>
+            <div class="countdown-item"><span id="seconds">00</span> Secs</div>
+        </div>
+        <a href="/signup" class="cta">Register Now</a>
+        <p>Share: <a href="#" style="color:white;">Twitter</a> | <a href="#" style="color:white;">Discord</a></p>
+    </div>
+    <script>
+        // Countdown to Aug 1, 2026
+        const target = new Date('2026-08-01T00:00:00');
+        function updateCountdown() {
+            const now = new Date();
+            const diff = target - now;
+            if (diff <= 0) {
+                document.getElementById('countdown').innerHTML = 'Event started!';
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (86400000)) / (3600000));
+            const mins = Math.floor((diff % 3600000) / 60000);
+            const secs = Math.floor((diff % 60000) / 1000);
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = mins;
+            document.getElementById('seconds').textContent = secs;
+        }
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
