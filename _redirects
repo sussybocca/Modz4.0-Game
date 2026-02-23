@@ -6,24 +6,32 @@
 /legacy-assets/*       /assets/:splat    301
 /downloads/game.zip    /releases/latest.zip    301
 
-# Proxy to external API with rate limiting and CORS
-/api/*   https://modz40.netlify.app/:splat    200
-# Also proxy with different backend for dev
-/dev-api/*    https://modz40.netlify.app/:splat    200
+# Proxy to external API (replace with actual API endpoint if needed)
+/api/*    https://api.modz40.com/:splat    200
+/dev-api/*    https://dev-api.modz40.com/:splat    200
 
 # A/B testing – 50% to new feature
 /signup    /signup-a    200
 /signup    /signup-b    200
 
-# Language-based redirects (accept-language header)
-/*    /en/:splat    200    Language=en
-/*    /es/:splat    200    Language=es
-/*    /fr/:splat    200    Language=fr
+# Language-based redirects (accept-language header) – only apply to root or non-language paths
+# Note: To avoid loops, these rules should only apply when the path does not already contain a language prefix.
+# Since Netlify does not support URL conditions, we rely on the fact that if a language folder is requested directly,
+# the file exists and will be served before these redirects. For safety, these rules are placed after explicit folder rules.
+/   /en/    302    Language=en
+/   /es/    302    Language=es
+/   /fr/    302    Language=fr
+/*  /en/:splat    200    Language=en
+/*  /es/:splat    200    Language=es
+/*  /fr/:splat    200    Language=fr
 
-# Country-based redirects (geoIP)
-/*    /us/:splat    200    Country=us
-/*    /ca/:splat    200    Country=ca
-/*    /uk/:splat    200    Country=gb
+# Country-based redirects (geoIP) – same precaution
+/   /us/    302    Country=us
+/   /ca/    302    Country=ca
+/   /uk/    302    Country=gb
+/*  /us/:splat    200    Country=us
+/*  /ca/:splat    200    Country=ca
+/*  /uk/:splat    200    Country=gb
 
 # Security headers – apply to all HTML pages via shadowing
 /*    /.netlify/headers-shadow  200
@@ -38,7 +46,7 @@
 /404    /404.html    404
 
 # Force HTTPS (Netlify does this by default, but explicit)
-/*   https://modz40.netlify.app/:splat    301!
+/*    https://modz40.netlify.app/:splat    301!
 
 # Remove trailing slash
 /:splat/    /:splat    301
