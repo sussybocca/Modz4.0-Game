@@ -1,0 +1,108 @@
+name: Generate Blog Posts
+
+on:
+  push:
+    paths:
+      - 'blog/update.txt'
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read post count from update.txt
+        id: read_count
+        run: |
+          if [ -f blog/update.txt ]; then
+            count=$(cat blog/update.txt | xargs)
+            if ! [[ "$count" =~ ^[0-9]+$ ]]; then
+              echo "Error: update.txt does not contain a valid number"
+              exit 1
+            fi
+            echo "count=$count" >> $GITHUB_OUTPUT
+          else
+            echo "update.txt not found in blog/ folder"
+            exit 1
+          fi
+
+      - name: Generate missing post files from template
+        run: |
+          count=${{ steps.read_count.outputs.count }}
+          for ((i=1; i<=count; i++)); do
+            post_file="blog/post${i}.html"
+            if [ ! -f "$post_file" ]; then
+              echo "Creating $post_file"
+              cp blog/post-template.html "$post_file"
+              post_date=$(date -d "2026-01-01 + $((i-1)) days" +"%B %d, %Y" 2>/dev/null || echo "February $i, 2026")
+              sed -i "s/POST_NUMBER/$i/g" "$post_file"
+              sed -i "s/POST_TITLE/Post $i/g" "$post_file"
+              sed -i "s/POST_DATE/$post_date/g" "$post_file"
+            else
+              echo "$post_file already exists"
+            fi
+          done
+
+      - name: Update blog index with post links
+        run: |
+          count=${{ steps.read_count.outputs.count }}
+          index_file="blog/index.html"
+
+          if ! grep -q "<!-- POSTS_START -->" "$index_file" || ! grep -q "<!-- POSTS_END -->" "$index_file"; then
+            echo "Error: blog/index.html must contain <!-- POSTS_START --> and <!-- POSTS_END --> markers"
+            exit 1
+          fi
+
+          tmp_cards=$(mktemp)
+          for ((i=count; i>=1; i--)); do
+            post_date=$(date -d "2026-01-01 + $((i-1)) days" +"%B %d, %Y" 2>/dev/null || echo "February $i, 2026")
+            if (( i % 3 == 0 )); then
+              emoji="🚀"
+            elif (( i % 3 == 1 )); then
+              emoji="🎮"
+            else
+              emoji="📰"
+            fi
+
+            # Build the card using printf (avoids heredoc issues)
+            printf '%s\n' \
+            "        <a href=\"/blog/post${i}.html\" style=\"text-decoration: none;\">" \
+            "            <div class=\"post-card\">" \
+            "                <div class=\"post-image\">${emoji}</div>" \
+            "                <div class=\"post-content\">" \
+            "                    <div class=\"post-meta\">" \
+            "                        <span class=\"post-date\">${post_date}</span>" \
+            "                        <span class=\"post-category\">Post ${i}</span>" \
+            "                    </div>" \
+            "                    <h2 class=\"post-title\">Post ${i}</h2>" \
+            "                    <p class=\"post-excerpt\">This is a placeholder for post ${i}. Replace with actual excerpt.</p>" \
+            "                    <span class=\"read-more\">Read more →</span>" \
+            "                </div>" \
+            "            </div>" \
+            "        </a>" >> "$tmp_cards"
+          done
+
+          awk -v cards="$(cat "$tmp_cards")" '
+            /<!-- POSTS_START -->/ { print; print cards; next }
+            /<!-- POSTS_END -->/ { next }
+            { print }
+          ' "$index_file" > "${index_file}.new"
+
+          mv "${index_file}.new" "$index_file"
+          rm -f "$tmp_cards"
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add blog/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-generate blog posts from update.txt"
+            git push
+          fi
