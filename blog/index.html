@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog – Modz4.0</title>
+    <style>
+        body { background: #0c0f15; color: #e0e0e0; font-family: 'Inter', sans-serif; padding: 2rem; }
+        .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
+        .post-card { background: #1e2430; border-radius: 20px; padding: 1.5rem; transition: 0.2s; }
+        .post-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .post-date { color: #8892b0; font-size: 0.9rem; }
+        h2 { margin: 0.5rem 0; color: #ffaa00; }
+        a { text-decoration: none; color: inherit; }
+        .read-more { color: #667eea; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <h1>📰 Modz4.0 Blog</h1>
+    <div class="post-grid">
+        <a href="/blog/post1.html">
+            <div class="post-card">
+                <div class="post-date">February 22, 2026</div>
+                <h2>Introducing Modz4.0</h2>
+                <p>The most advanced moddable game engine is here.</p>
+                <span class="read-more">Read more →</span>
+            </div>
+        </a>
+        <a href="/blog/post2.html">
+            <div class="post-card">
+                <div class="post-date">February 15, 2026</div>
+                <h2>Summer Jam Announcement</h2>
+                <p>Get ready for the biggest modding event.</p>
+                <span class="read-more">Read more →</span>
+            </div>
+        </a>
+    </div>
+</body>
+</html>
