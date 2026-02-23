@@ -2,16 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up A – Modz4.0</title>
-    <style>body { background: #0c0f15; color: #fff; font-family: 'Inter', sans-serif; text-align: center; padding: 50px; } .card { background: #1e2430; border-radius: 30px; padding: 40px; max-width: 400px; margin: auto; } input { display: block; width: 100%; padding: 12px; margin: 10px 0; background: #2e3440; border: none; border-radius: 30px; color: white; } button { background: #667eea; border: none; padding: 12px 30px; border-radius: 30px; color: white; font-weight: bold; }</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up – Modz4.0 (Variant A)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0c0f15;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .card {
+            background: #1e2430;
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border: 1px solid #2a2f3c;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #ffaa00;
+        }
+        p {
+            color: #b0b8d0;
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b0b8d0;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: #2e3440;
+            border: 1px solid #3a4050;
+            border-radius: 30px;
+            color: white;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+        }
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #667eea;
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
 </head>
 <body>
     <div class="card">
         <h1>✨ Join Modz4.0 (Version A)</h1>
         <p>Get early access to modding tools</p>
-        <input type="text" placeholder="Username">
-        <input type="email" placeholder="Email">
-        <button>Sign Up</button>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required minlength="3">
+                <div class="error" id="usernameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error" id="emailError"></div>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
     </div>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Simulate API call
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            // Basic validation
+            if (username.length < 3) {
+                document.getElementById('usernameError').textContent = 'Username must be at least 3 characters';
+                return;
+            }
+            if (!email.includes('@')) {
+                document.getElementById('emailError').textContent = 'Invalid email';
+                return;
+            }
+            // Send tracking event
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'signup', { 'variant': 'A' });
+            }
+            alert('Signup successful! (demo)');
+        });
+    </script>
 </body>
 </html>
