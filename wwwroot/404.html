@@ -5,27 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Modz4.0</title>
     <style>
-        body { background: #0c0f15; color: #e0e0e0; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { text-align: center; max-width: 600px; }
-        h1 { font-size: 6rem; margin: 0; color: #ffaa00; text-shadow: 0 0 20px rgba(255,170,0,0.5); }
-        p { font-size: 1.2rem; margin: 20px 0; }
-        a { color: #667eea; text-decoration: none; }
-        .glitch { animation: glitch 1s infinite; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0c0f15;
+            color: #e0e0e0;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 8rem;
+            margin: 0;
+            background: linear-gradient(135deg, #ffaa00, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glitch 3s infinite;
+            position: relative;
+        }
+        h1::before, h1::after {
+            content: '404';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        h1::before {
+            color: #0ff;
+            z-index: -1;
+            animation: glitch-offset 0.3s infinite;
+        }
+        h1::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch-offset2 0.2s infinite;
+        }
         @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+            0% { transform: skew(0deg, 0deg); }
+            20% { transform: skew(2deg, 1deg); }
+            40% { transform: skew(-2deg, -1deg); }
+            60% { transform: skew(1deg, 2deg); }
+            80% { transform: skew(-1deg, -2deg); }
+            100% { transform: skew(0deg, 0deg); }
+        }
+        @keyframes glitch-offset {
+            0% { transform: translate(2px, 1px); }
+            100% { transform: translate(-2px, -1px); }
+        }
+        @keyframes glitch-offset2 {
+            0% { transform: translate(-2px, 2px); }
+            100% { transform: translate(2px, -2px); }
+        }
+        p {
+            font-size: 1.2rem;
+            margin: 2rem 0;
+            color: #b0b8d0;
+        }
+        a {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        a:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="glitch">404</h1>
+        <h1>404</h1>
         <p>Looks like you've wandered into the void. The page you're looking for doesn't exist (or has been eaten by a bug).</p>
-        <p><a href="/">🚀 Return to Game World</a></p>
+        <a href="/">🚀 Return to Game World</a>
     </div>
 </body>
 </html>
