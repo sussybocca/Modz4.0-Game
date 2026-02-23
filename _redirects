@@ -1,40 +1,23 @@
-# ============================================
-# MODZ4.0 ADVANCED REDIRECTS & REWRITES
-# Order matters – first match wins.
-# ============================================
+# SPA fallback – all routes to index.html (except existing files)
+/*    /index.html    200
 
-# ---------- 1. EXACT STATIC PAGES (before SPA fallback) ----------
-# Serve custom 404 page at /404
-/404    /404.html    404
-
-# Serve maintenance page directly
-/maintenance.html    /maintenance.html    200
-
-# Serve different robots.txt based on host (must come before SPA)
-/robots.txt    /robots.staging.txt    200    Host=staging.modz40.com
-/robots.txt    /robots.prod.txt       200    Host=modz40.com
-
-# ---------- 2. MAINTENANCE MODE (global, but after static files) ----------
-# If visitor role is not admin, show maintenance page (503)
-/*    /maintenance.html    503    Role=visitor
-
-# ---------- 3. PERMANENT REDIRECTS (301) ----------
+# Permanent redirects (301) – old to new
 /old-game-world        /game-world       301
 /legacy-assets/*       /assets/:splat    301
 /downloads/game.zip    /releases/latest.zip    301
 
-# Remove trailing slash (do this before other rewrites)
-/:splat/    /:splat    301
-
-# ---------- 4. PROXY TO EXTERNAL APIS ----------
+# Proxy to external API (replace with actual API endpoint if needed)
 /api/*    https://api.modz40.com/:splat    200
 /dev-api/*    https://dev-api.modz40.com/:splat    200
 
-# ---------- 5. A/B TESTING ----------
+# A/B testing – 50% to new feature
 /signup    /signup-a    200
 /signup    /signup-b    200
 
-# ---------- 6. LANGUAGE-BASED REWRITES ----------
+# Language-based redirects (accept-language header) – only apply to root or non-language paths
+# Note: To avoid loops, these rules should only apply when the path does not already contain a language prefix.
+# Since Netlify does not support URL conditions, we rely on the fact that if a language folder is requested directly,
+# the file exists and will be served before these redirects. For safety, these rules are placed after explicit folder rules.
 /   /en/    302    Language=en
 /   /es/    302    Language=es
 /   /fr/    302    Language=fr
@@ -42,7 +25,7 @@
 /*  /es/:splat    200    Language=es
 /*  /fr/:splat    200    Language=fr
 
-# ---------- 7. COUNTRY-BASED REWRITES ----------
+# Country-based redirects (geoIP) – same precaution
 /   /us/    302    Country=us
 /   /ca/    302    Country=ca
 /   /uk/    302    Country=gb
@@ -50,41 +33,52 @@
 /*  /ca/:splat    200    Country=ca
 /*  /uk/:splat    200    Country=gb
 
-# ---------- 8. SECURITY HEADERS (shadow) ----------
+# Security headers – apply to all HTML pages via shadowing
 /*    /.netlify/headers-shadow  200
 
-# ---------- 9. CAMPAIGN TRACKING ----------
-/landing    /campaign/summer2026    302
-/promo      /campaign/spring2026    302
-
-# ---------- 10. ADMIN AREA (IP‑restricted) ----------
-/admin/*    /admin/:splat    200    IP=192.168.1.0/24
-/admin/*    /404.html        404
-
-# ---------- 11. BLOG PRETTY URLS ----------
-/blog/post?id=:id    /blog/:id    200
-
-# ---------- 12. SPLIT TESTING WITH COOKIES ----------
-/checkout    /checkout-v1    200    Cookie=test=control
-/checkout    /checkout-v2    200    Cookie=test=variant
-
-# ---------- 13. BLOCK SENSITIVE FILES ----------
-/.env*    /.env*    404
-/config*  /config*  404
-/*.sql    /*.sql    404
-
-# ---------- 14. CORS PROXY FOR FONTS ----------
-/*.woff2    /.netlify/functions/cors-proxy    200
-/*.ttf      /.netlify/functions/cors-proxy    200
-
-# ---------- 15. STATIC ASSET CACHE CONTROL ----------
+# Cache control for static assets
 /assets/*    /assets/:splat    200    Cache-Control=public,max-age=31536000,immutable
 /images/*    /images/:splat    200    Cache-Control=public,max-age=86400
 /js/*        /js/:splat        200    Cache-Control=public,max-age=31536000,immutable
 /css/*       /css/:splat       200    Cache-Control=public,max-age=31536000,immutable
 
-# ---------- 16. FORCE HTTPS ----------
+# Custom 404 page
+/404    /404.html    404
+
+# Force HTTPS (Netlify does this by default, but explicit)
 /*    https://modz40.netlify.app/:splat    301!
 
-# ---------- 17. SPA FALLBACK (LAST) – serve index.html for all other routes ----------
-/*    /index.html    200
+# Remove trailing slash
+/:splat/    /:splat    301
+
+# Redirects for campaign tracking (UTM)
+/landing    /campaign/summer2026    302
+/promo      /campaign/spring2026    302
+
+# Maintenance mode – all traffic to maintenance page (except admins)
+/*    /maintenance.html    503    Role=visitor
+/maintenance.html    /maintenance.html    200
+
+# Admin area – only allow specific IP ranges
+/admin/*    /admin/:splat    200    IP=192.168.1.0/24
+/admin/*    /404.html    404
+
+# Rewrite for pretty URLs
+/blog/post?id=:id    /blog/:id    200
+
+# Example of split testing with cookies
+/checkout    /checkout-v1    200    Cookie=test=control
+/checkout    /checkout-v2    200    Cookie=test=variant
+
+# Serve different robots.txt for staging
+/robots.txt    /robots.staging.txt    200    Host=staging.modz40.com
+/robots.txt    /robots.prod.txt       200    Host=modz40.com
+
+# Block access to sensitive files
+/.env*    /.env*    404
+/config*  /config*  404
+/*.sql    /*.sql    404
+
+# Add CORS headers for font files
+/*.woff2    /.netlify/functions/cors-proxy    200
+/*.ttf      /.netlify/functions/cors-proxy    200
