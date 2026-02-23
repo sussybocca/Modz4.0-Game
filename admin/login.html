@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login – Modz4.0</title>
+    <style>
+        body {
+            background: #0c0f15;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: #1e2430;
+            border-radius: 30px;
+            padding: 3rem;
+            width: 350px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border: 1px solid #2a2f3c;
+        }
+        h1 {
+            margin-bottom: 2rem;
+            color: #ffaa00;
+        }
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background: #2e3440;
+            border: 1px solid #3a4050;
+            border-radius: 30px;
+            color: white;
+        }
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #667eea;
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+        .info {
+            font-size: 0.8rem;
+            color: #8892b0;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h1>🔐 Admin Login</h1>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <div id="error" class="error"></div>
+            <button type="submit">Log in</button>
+        </form>
+        <div class="info">Only accessible from IP 192.168.1.0/24</div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Simulate authentication
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
+
+            if (username === 'admin' && password === 'modz40') {
+                // Set secure cookie (simulated)
+                document.cookie = "adminToken=abc123; Secure; HttpOnly; SameSite=Strict";
+                window.location.href = '/admin/dashboard.html';
+            } else {
+                errorDiv.textContent = 'Invalid credentials';
+            }
+        });
+    </script>
+</body>
+</html>
