@@ -2,11 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modz4.0 – English</title>
-    <style>body { background: #0c0f15; color: white; font-family: 'Inter', sans-serif; padding: 20px; }</style>
+    <style>
+        /* Import same styles as main site */
+        body { font-family: 'Inter', sans-serif; background: #0c0f15; color: #e0e0e0; margin: 0; }
+        .navbar { background: #1e2430; padding: 1rem; }
+        .nav-links { display: flex; gap: 2rem; justify-content: center; }
+        .nav-links a { color: #b0b8d0; text-decoration: none; }
+        .nav-links a:hover { color: white; }
+        .content { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        h1 { color: #ffaa00; }
+        .language-switcher { position: absolute; top: 1rem; right: 1rem; }
+        .language-switcher select { background: #2e3440; color: white; border: none; padding: 0.5rem; border-radius: 20px; }
+    </style>
 </head>
 <body>
-    <h1>🇬🇧 Welcome to Modz4.0</h1>
-    <p>Create, mod, and share your own games.</p>
+    <div class="language-switcher">
+        <select onchange="location.href=this.value">
+            <option value="/en/">🇬🇧 English</option>
+            <option value="/es/">🇪🇸 Español</option>
+            <option value="/fr/">🇫🇷 Français</option>
+        </select>
+    </div>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="/en/">Home</a>
+            <a href="/en/about.html">About</a>
+            <a href="/en/game.html">Game</a>
+        </div>
+    </nav>
+    <div class="content">
+        <h1>Welcome to Modz4.0</h1>
+        <p>Create, mod, and share your own games. This is the English version of our site.</p>
+    </div>
 </body>
 </html>
