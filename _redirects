@@ -1,5 +1,6 @@
 # SPA fallback – all routes to index.html (except existing files)
-/*    /index.html    200
+/404    /404.html    404
+/*      /index.html  200
 
 # Permanent redirects (301) – old to new
 /old-game-world        /game-world       301
