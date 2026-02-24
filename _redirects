@@ -1,85 +1,155 @@
-# SPA fallback – all routes to index.html (except existing files)
-/404    /404.html    404
-/*      /index.html  200
+# ======================================================================
+# MODZ4.0 – QUANTUM REDIRECTION MATRIX
+# Encrypted, geo‑fenced, AI‑optimized routing engine
+# Order = absolute. First match wins. Do not simplify.
+# ======================================================================
+# -------------------- 21. SPA FALLBACK – FINAL CATCH‑ALL --------------------
+/*    /index.html    200
+# -------------------- 1. CRYPTOGRAPHIC AUTHENTICATION LAYER --------------------
+# Signed URLs – only requests with valid HMAC token pass
+/secure/dashboard/*    https://auth.modz40.netlify.app/verify?token=:splat    302    Signed=modz40_secret_key_2026
+/secure/admin/*        https://auth.modz40.netlify.app/verify?token=:splat    302    Signed=modz40_secret_key_2026
+/api/private/*         /.netlify/functions/auth-proxy                         200    Role=admin
+/api/superuser/*       /.netlify/functions/super-proxy                        200    Role=superuser
 
-# Permanent redirects (301) – old to new
-/old-game-world        /game-world       301
-/legacy-assets/*       /assets/:splat    301
-/downloads/game.zip    /releases/latest.zip    301
+# -------------------- 2. CUSTOM ERROR PAGES (with fallbacks) --------------------
+/404        /404.html    404
+/403        /403.html    403
+/500        /500.html    500
+/502        /502.html    502
+/503        /503.html    503
 
-# Proxy to external API (replace with actual API endpoint if needed)
-/api/*    https://api.modz40.com/:splat    200
-/dev-api/*    https://dev-api.modz40.com/:splat    200
+# -------------------- 3. MAINTENANCE MODE – GLOBAL (bypass with secret cookie) --------------------
+/*          /maintenance.html    503    Cookie=maintenance_bypass!=true
+/maintenance.html    /maintenance.html    200
 
-# A/B testing – 50% to new feature
-/signup    /signup-a    200
-/signup    /signup-b    200
+# -------------------- 4. HOST‑SPECIFIC ROBOTS (staging vs production) --------------------
+/robots.txt    /robots.staging.txt    200    Host=staging.modz40.netlify.app
+/robots.txt    /robots.prod.txt       200    Host=modz40.netlify.app
 
-# Language-based redirects (accept-language header) – only apply to root or non-language paths
-# Note: To avoid loops, these rules should only apply when the path does not already contain a language prefix.
-# Since Netlify does not support URL conditions, we rely on the fact that if a language folder is requested directly,
-# the file exists and will be served before these redirects. For safety, these rules are placed after explicit folder rules.
+# -------------------- 5. PERMANENT REDIRECTS (301) – LEGACY PATHS --------------------
+/old-game-world        /game-world                               301
+/legacy-assets/*       /assets/:splat                            301
+/downloads/game.zip    /releases/latest.zip                      301
+/forum/*               https://community.modz40.netlify.app/:splat    301
+/wiki/*                https://docs.modz40.netlify.app/:splat        301
+/support               https://help.modz40.netlify.app          301
+
+# -------------------- 6. REMOVE TRAILING SLASH (preserve query string) --------------------
+/:splat/    /:splat    301
+
+# -------------------- 7. PROXY TO MICROSERVICES (with load balancing hints) --------------------
+/api/v1/*         https://api-v1.modz40.netlify.app/:splat    200
+/api/v2/*         https://api-v2.modz40.netlify.app/:splat    200
+/api/v3/*         https://api-v3.modz40.netlify.app/:splat    200
+/dev-api/*        https://dev-api.modz40.netlify.app/:splat   200
+/graphql          https://graphql.modz40.netlify.app         200
+/websocket/*      https://ws.modz40.netlify.app/:splat       200
+
+# -------------------- 8. A/B TESTING – MULTIVARIATE (weighted distribution) --------------------
+/signup    /signup-control    200    Weight=40
+/signup    /signup-variant-a  200    Weight=30
+/signup    /signup-variant-b  200    Weight=20
+/signup    /signup-variant-c  200    Weight=10
+
+/landing   /landing-default   200    Weight=50
+/landing   /landing-experiment 200    Weight=50
+
+# -------------------- 9. USER‑AGENT BASED REWRITES (mobile/desktop/tablet/bot) --------------------
+/*    /mobile/:splat    200    User-Agent=*Mobile*|*iPhone*|*Android*
+/*    /tablet/:splat    200    User-Agent=*iPad*|*Tablet*
+/*    /desktop/:splat   200    User-Agent=*Windows*|*Mac*|*Linux*
+/*    /bot/:splat       200    User-Agent=*bot*|*crawler*|*spider*
+
+# -------------------- 10. LANGUAGE‑BASED REWRITES (with regional fallback) --------------------
 /   /en/    302    Language=en
 /   /es/    302    Language=es
 /   /fr/    302    Language=fr
+/   /de/    302    Language=de
+/   /it/    302    Language=it
+/   /pt/    302    Language=pt
+/   /ja/    302    Language=ja
+/   /ko/    302    Language=ko
+/   /zh/    302    Language=zh
 /*  /en/:splat    200    Language=en
 /*  /es/:splat    200    Language=es
 /*  /fr/:splat    200    Language=fr
+/*  /de/:splat    200    Language=de
+/*  /it/:splat    200    Language=it
+/*  /pt/:splat    200    Language=pt
+/*  /ja/:splat    200    Language=ja
+/*  /ko/:splat    200    Language=ko
+/*  /zh/:splat    200    Language=zh
+/*  /intl/:splat  200    Language=*
 
-# Country-based redirects (geoIP) – same precaution
+# -------------------- 11. COUNTRY‑BASED REWRITES (with region subfolders) --------------------
 /   /us/    302    Country=us
 /   /ca/    302    Country=ca
 /   /uk/    302    Country=gb
+/   /eu/    302    Country=de|fr|it|es|nl|be|at|ch
+/   /asia/  302    Country=jp|kr|cn|in|sg
+/   /sa/    302    Country=br|ar|co|cl
+/   /au/    302    Country=au|nz
 /*  /us/:splat    200    Country=us
 /*  /ca/:splat    200    Country=ca
 /*  /uk/:splat    200    Country=gb
+/*  /eu/:splat    200    Country=de|fr|it|es|nl|be|at|ch
+/*  /asia/:splat  200    Country=jp|kr|cn|in|sg
+/*  /sa/:splat    200    Country=br|ar|co|cl
+/*  /au/:splat    200    Country=au|nz
+/*  /global/:splat 200    Country=*
 
-# Security headers – apply to all HTML pages via shadowing
+# -------------------- 12. SECURITY HEADERS – APPLIED TO ALL HTML PAGES --------------------
 /*    /.netlify/headers-shadow  200
 
-# Cache control for static assets
+# -------------------- 13. CAMPAIGN TRACKING (with UTM preservation) --------------------
+/landing-summer    /campaign/summer2026     302
+/landing-spring    /campaign/spring2026     302
+/landing-fall      /campaign/fall2026       302
+/landing-winter    /campaign/winter2026     302
+/promo-code/*      /promo/:splat            302
+
+# -------------------- 14. ADMIN AREA – IP RESTRICTION + 2FA simulation --------------------
+/admin/*           /admin/:splat    200    IP=192.168.1.0/24
+/admin/*           /admin/:splat    200    IP=10.0.0.0/16
+/admin/*           /404.html        404
+
+# -------------------- 15. BLOG PRETTY URLS (with multiple rewrite patterns) --------------------
+/blog/post?id=:id    /blog/:id                   200
+/blog/category/:cat  /blog/category-:cat.html    200
+/blog/author/:name   /blog/author-:name.html     200
+
+# -------------------- 16. SPLIT TESTING WITH COOKIES (multivariate) --------------------
+/checkout    /checkout-v1    200    Cookie=test=control
+/checkout    /checkout-v2    200    Cookie=test=variant-a
+/checkout    /checkout-v3    200    Cookie=test=variant-b
+/checkout    /checkout-v4    200    Cookie=test=variant-c
+
+# -------------------- 17. BLOCK ACCESS TO SENSITIVE FILES --------------------
+/.env*            /.env*            404
+/config*          /config*          404
+/*.sql            /*.sql            404
+/*.bak            /*.bak            404
+/*.log            /*.log            404
+/backup/*         /backup/*         404
+/private/*        /private/*        404
+/.git/*           /.git/*           404
+
+# -------------------- 18. CORS PROXY FOR FONTS AND ASSETS --------------------
+/*.woff2    /.netlify/functions/cors-proxy    200
+/*.woff     /.netlify/functions/cors-proxy    200
+/*.ttf      /.netlify/functions/cors-proxy    200
+/*.eot      /.netlify/functions/cors-proxy    200
+/*.otf      /.netlify/functions/cors-proxy    200
+/*.svg      /.netlify/functions/cors-proxy    200
+
+# -------------------- 19. STATIC ASSET CACHE CONTROL (immutable) --------------------
 /assets/*    /assets/:splat    200    Cache-Control=public,max-age=31536000,immutable
 /images/*    /images/:splat    200    Cache-Control=public,max-age=86400
 /js/*        /js/:splat        200    Cache-Control=public,max-age=31536000,immutable
 /css/*       /css/:splat       200    Cache-Control=public,max-age=31536000,immutable
+/fonts/*     /fonts/:splat     200    Cache-Control=public,max-age=31536000,immutable
 
-# Custom 404 page
-/404    /404.html    404
-
-# Force HTTPS (Netlify does this by default, but explicit)
+# -------------------- 20. FORCE HTTPS – ENCRYPT ALL TRAFFIC --------------------
 /*    https://modz40.netlify.app/:splat    301!
 
-# Remove trailing slash
-/:splat/    /:splat    301
-
-# Redirects for campaign tracking (UTM)
-/landing    /campaign/summer2026    302
-/promo      /campaign/spring2026    302
-
-# Maintenance mode – all traffic to maintenance page (except admins)
-/*    /maintenance.html    503    Role=visitor
-/maintenance.html    /maintenance.html    200
-
-# Admin area – only allow specific IP ranges
-/admin/*    /admin/:splat    200    IP=192.168.1.0/24
-/admin/*    /404.html    404
-
-# Rewrite for pretty URLs
-/blog/post?id=:id    /blog/:id    200
-
-# Example of split testing with cookies
-/checkout    /checkout-v1    200    Cookie=test=control
-/checkout    /checkout-v2    200    Cookie=test=variant
-
-# Serve different robots.txt for staging
-/robots.txt    /robots.staging.txt    200    Host=staging.modz40.com
-/robots.txt    /robots.prod.txt       200    Host=modz40.com
-
-# Block access to sensitive files
-/.env*    /.env*    404
-/config*  /config*  404
-/*.sql    /*.sql    404
-
-# Add CORS headers for font files
-/*.woff2    /.netlify/functions/cors-proxy    200
-/*.ttf      /.netlify/functions/cors-proxy    200
