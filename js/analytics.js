@@ -5,7 +5,7 @@
   // Configuration
   const CONFIG = {
     GA_TRACKING_ID: 'G-XTF87DM051', // Replace with actual
-    API_ENDPOINT: 'https://api.modz40.com/analytics',
+    API_ENDPOINT: 'https://modz40.netlify.app/analytics',
     DEBUG: false, // set false in production
     CONSENT_COOKIE: 'modz40_analytics_consent',
     VARIANT_COOKIE: 'modz40_ab_variant',
