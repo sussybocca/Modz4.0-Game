@@ -3,51 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 - Forbidden</title>
+    <title>403 - Forbidden | Modz4.0</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #0c0f15;
+            background: #0a0c10;
             color: #e0e0e0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .background-grid {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(102, 126, 234, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 126, 234, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
         }
         .container {
             text-align: center;
-            max-width: 600px;
-            padding: 2rem;
+            max-width: 700px;
+            padding: 3rem;
+            background: rgba(18, 22, 28, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            z-index: 1;
+            position: relative;
+            animation: fadeInUp 0.6s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         h1 {
             font-size: 8rem;
             margin: 0;
-            background: linear-gradient(135deg, #ff6b6b, #c0392b);
+            background: linear-gradient(135deg, #ff6b6b, #c0392b, #e74c3c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: glitch 3s infinite;
+            filter: drop-shadow(0 0 20px rgba(231, 76, 60, 0.3));
+            animation: glitch 4s infinite;
+            position: relative;
+        }
+        h1::before, h1::after {
+            content: '403';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+        }
+        h1::before {
+            color: #0ff;
+            z-index: -1;
+            animation: glitch-offset 0.3s infinite;
+        }
+        h1::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch-offset2 0.2s infinite;
+        }
+        @keyframes glitch {
+            0% { transform: skew(0deg, 0deg); }
+            20% { transform: skew(2deg, 1deg); }
+            40% { transform: skew(-2deg, -1deg); }
+            60% { transform: skew(1deg, 2deg); }
+            80% { transform: skew(-1deg, -2deg); }
+            100% { transform: skew(0deg, 0deg); }
+        }
+        @keyframes glitch-offset {
+            0% { transform: translate(3px, 2px); }
+            100% { transform: translate(-3px, -2px); }
+        }
+        @keyframes glitch-offset2 {
+            0% { transform: translate(-3px, 3px); }
+            100% { transform: translate(3px, -3px); }
+        }
+        .lock-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px #ff6b6b);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
         }
         p {
-            font-size: 1.2rem;
-            margin: 2rem 0;
+            font-size: 1.3rem;
+            margin: 1.5rem 0 2rem;
             color: #b0b8d0;
+            line-height: 1.6;
         }
-        a {
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .countdown-item {
+            background: rgba(30, 36, 48, 0.8);
+            backdrop-filter: blur(5px);
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffaa00;
+        }
+        .countdown-label {
+            font-size: 0.8rem;
+            color: #8892b0;
+            text-transform: uppercase;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
             display: inline-block;
             padding: 1rem 2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102,126,234,0.6);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #667eea;
+            color: #667eea;
+        }
+        .btn-outline:hover {
             background: #667eea;
             color: white;
+            transform: translateY(-3px);
+        }
+        footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #5f6a7a;
+        }
+        footer a {
+            color: #667eea;
             text-decoration: none;
-            border-radius: 40px;
         }
     </style>
 </head>
 <body>
+    <div class="background-grid"></div>
     <div class="container">
+        <div class="lock-icon">🔒</div>
         <h1>403</h1>
-        <p>You don't have permission to access this area. If you believe this is an error, contact the administrator.</p>
-        <a href="/">Return Home</a>
+        <p>You don't have permission to access this area. The gates are sealed by ancient wards.</p>
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">--</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">--</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">--</div>
+                <div class="countdown-label">Mins</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">--</div>
+                <div class="countdown-label">Secs</div>
+            </div>
+        </div>
+        <p>Your access will be automatically reviewed in approximately:</p>
+        <div class="buttons">
+            <a href="/" class="btn btn-primary">🚀 Return to Game World</a>
+            <a href="/support" class="btn btn-outline">📞 Contact Support</a>
+        </div>
+        <footer>Error 403 – Forbidden | <a href="/privacy">Privacy</a></footer>
     </div>
+    <script>
+        // Countdown to a random future date (simulated review)
+        const target = new Date(Date.now() + 3*24*60*60*1000 + 5*60*60*1000 + 23*60*1000 + 45*1000);
+        function updateCountdown() {
+            const now = new Date();
+            const diff = target - now;
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+            const days = Math.floor(diff / (1000*60*60*24));
+            const hours = Math.floor((diff % (86400000)) / (3600000));
+            const mins = Math.floor((diff % 3600000) / 60000);
+            const secs = Math.floor((diff % 60000) / 1000);
+            document.getElementById('days').textContent = days.toString().padStart(2,'0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2,'0');
+            document.getElementById('minutes').textContent = mins.toString().padStart(2,'0');
+            document.getElementById('seconds').textContent = secs.toString().padStart(2,'0');
+        }
+        setInterval(updateCountdown, 1000);
+    </script>
 </body>
 </html>
